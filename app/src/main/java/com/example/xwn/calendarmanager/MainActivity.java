@@ -1,15 +1,6 @@
 package com.example.xwn.calendarmanager;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.CalendarContract;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -32,11 +24,11 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import android.provider.CalendarContract.Calendars;
+
+import com.example.xwn.calendarmanager.util.CalendarUtil;
+
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -54,11 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private List<EventRecord> mEventRecordList;
     private RecyclerView itemRecycler;
     private MyAdapter myAdapter;
+    private EditText eventTeacherEdit;
+    private CheckBox checkBox;
 
-    //用到的相关URL
-    private static String calanderURL = "content://com.android.calendar/calendars";
-    private static String calanderEventURL = "content://com.android.calendar/events";
-    private static String calanderRemiderURL = "content://com.android.calendar/reminders";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,52 +76,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "点击");
-                inputAccount();
-
+                Log.d(TAG, CalendarUtil.queryAccountName(MainActivity.this,"简单日历"));
+                //CalendarUtil.inputAccount(MainActivity.this,"简单日历","课程表","woshixwn@gmail.com");
+                String calId = CalendarUtil.queryAccountName(MainActivity.this,"简单日历");
+                if (!calId.equals("error")){
+                    Log.d(TAG, calculateDateByWeeks(startDate,13,2,df).toString());
+                    CalendarUtil.writeEvent(MainActivity.this,calId,"web信息框架","李卫东","东九楼 D206",new Date(1479744000000l),new Date(1479744000000l+1000l*60l*60l));
+                };
             }
         });
     }
-    //读取现有日历账户
-    private void readUser(){
-        Cursor userCursor = getContentResolver().query(Uri.parse(calanderURL), null, null, null, null);
 
-        System.out.println("Count: " + userCursor.getCount());
-        Toast.makeText(this, "Count: " + userCursor.getCount(), Toast.LENGTH_LONG).show();
 
-        for (userCursor.moveToFirst(); !userCursor.isAfterLast(); userCursor.moveToNext()) {
-            System.out.println("name: " + userCursor.getString(userCursor.getColumnIndex("ACCOUNT_NAME")));
-
-            String userName1 = userCursor.getString(userCursor.getColumnIndex("name"));
-            String userName0 = userCursor.getString(userCursor.getColumnIndex("ACCOUNT_NAME"));
-            Toast.makeText(this, "NAME: " + userName1 + " -- ACCOUNT_NAME: " + userName0, Toast.LENGTH_LONG).show();
-        }
-    }
-    //
-    private void inputAccount(){
-        TimeZone timeZone = TimeZone.getDefault();
-        ContentValues value = new ContentValues();
-        value.put(CalendarContract.Calendars.NAME, "yy");
-
-        value.put(Calendars.ACCOUNT_NAME, "mygmailaddress@gmail.com");
-        value.put(Calendars.ACCOUNT_TYPE, "com.android.exchange");
-        value.put(Calendars.CALENDAR_DISPLAY_NAME, "mytt");
-        value.put(Calendars.VISIBLE, 1);
-        value.put(Calendars.CALENDAR_COLOR, -9206951);
-        value.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
-        value.put(Calendars.SYNC_EVENTS, 1);
-        value.put(Calendars.CALENDAR_TIME_ZONE, timeZone.getID());
-        value.put(Calendars.OWNER_ACCOUNT, "mygmailaddress@gmail.com");
-        value.put(Calendars.CAN_ORGANIZER_RESPOND, 0);
-
-        Uri calendarUri = Calendars.CONTENT_URI;
-        calendarUri = calendarUri.buildUpon()
-                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, "mygmailaddress@gmail.com")
-                .appendQueryParameter(Calendars.ACCOUNT_TYPE, "com.android.exchange")
-                .build();
-
-        getContentResolver().insert(calendarUri, value);
-    }
 
     private void initRecycleView() {
         itemRecycler = (RecyclerView) findViewById(R.id.item_recycler);
@@ -162,24 +118,45 @@ public class MainActivity extends AppCompatActivity {
         View classDialogView = getLayoutInflater().inflate(R.layout.class_dialog,null);
         eventTitleEdit = (EditText) classDialogView.findViewById(R.id.event_title_edit);
         eventLocationEdit = (EditText) classDialogView.findViewById(R.id.event_location_edit);
+        eventTeacherEdit = (EditText) classDialogView.findViewById(R.id.event_teacher_edit);
         weekNumber = (NumberPicker) classDialogView.findViewById(R.id.week_number);
         dayNumber = (NumberPicker) classDialogView.findViewById(R.id.day_number);
+        checkBox = (CheckBox) classDialogView.findViewById(R.id.checkbox_direct);
         saveEvent = (Button) classDialogView.findViewById(R.id.save_event);
         saveEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Date tempDate = null;
-                try {
-                    tempDate = df.parse(calculateDateByWeeks(startDate,weekNumber.getValue(),dayNumber.getValue(),df));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                EventRecord eventRecord = new EventRecord(eventTitleEdit.getText().toString(),tempDate,weekNumber.getValue(),dayNumber.getValue(),eventLocationEdit.getText().toString());
-                Log.d(TAG, "onClick:\n"+eventRecord.toString());
+                Date tempDate = calculateDateByWeeks(startDate, weekNumber.getValue(), dayNumber.getValue(), df);
+                EventRecord eventRecord = new EventRecord(eventTitleEdit.getText().toString(), tempDate, weekNumber.getValue(), dayNumber.getValue(), eventLocationEdit.getText().toString(),"上课老师是："+eventTeacherEdit.getText().toString(),8l*60l*60l*1000l,100l*60l*1000l);
+                if (!checkBox.isClickable()) {
+//                    try {
+//                        tempDate = df.parse(calculateDateByWeeks(startDate, weekNumber.getValue(), dayNumber.getValue(), df));
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    }
+                    Log.d(TAG, "onClick:\n" + eventRecord.toString());
 //                eventRecord.save();
+                    myAdapter.add(eventRecord, 0);
+                    Log.d(TAG, "列表现有项目：" + mEventRecordList.size());
+                }else{
+                    String calId = CalendarUtil.queryAccountName(MainActivity.this,"简单日历");
+
+                    if (!calId.equals("error")){
+                        CalendarUtil.writeEvent(MainActivity.this,calId,eventRecord.getEventTitle(), eventRecord.getEventDescription(),eventRecord.getEventLocation(),
+                                new Date(eventRecord.getEventDate().getTime()+eventRecord.getEventStartMilliSecond()),
+                                new Date(eventRecord.getEventDate().getTime()+eventRecord.getEventStartMilliSecond()+eventRecord.getEventLastMilliSecond())
+                        );
+                    }else{
+                        Toast.makeText(MainActivity.this,"无账户将为你添加一个",Toast.LENGTH_SHORT).show();
+                        calId = CalendarUtil.inputAccount(MainActivity.this,"简单日历","课程表","this is account");
+                        CalendarUtil.writeEvent(MainActivity.this,calId,eventRecord.getEventTitle(), eventRecord.getEventDescription(),eventRecord.getEventLocation(),
+                                new Date(eventRecord.getEventDate().getTime()+eventRecord.getEventStartMilliSecond()),
+                                new Date(eventRecord.getEventDate().getTime()+eventRecord.getEventStartMilliSecond()+eventRecord.getEventLastMilliSecond())
+                                );
+                    }
+                }
+
                 classDialog.dismiss();
-                myAdapter.add(eventRecord,0);
-                Log.d(TAG, "列表现有项目："+ mEventRecordList.size());
             }
         });
         initNumberPicker();
@@ -250,9 +227,12 @@ public class MainActivity extends AppCompatActivity {
 
     //将周次信息转成日期信息
     //输入参数：起始日期、周次、星期几、用于转换的日期格式
-    public String calculateDateByWeeks(Date startDate, int weeks, int days, SimpleDateFormat sdf){
+    public Date calculateDateByWeeks(Date startDate, int weeks, int days, SimpleDateFormat sdf){
         long intervalSeconds = ((weeks-1)*7+(days-1))*1000l*60l*60l*24l;
-        return sdf.format(new Date(startDate.getTime()+intervalSeconds));
+        Date date = new Date(startDate.getTime()+intervalSeconds);
+        Log.d(TAG, "calculateDateByWeeks: "+date.getTime());
+//        return sdf.format(date);
+        return date;
     }
     //将日期信息转成周次信息
     //输入参数：起始日期、需要转换的日期、用户转换的日期格式

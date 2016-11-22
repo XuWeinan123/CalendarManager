@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="事件地点"
                 android:id="@+id/event_location"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,8 +47,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_below="@+id/linear02"
-            android:layout_marginTop="16dp"
             android:id="@+id/linear03">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="课程老师"
+                android:id="@+id/event_teacher"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="输入事件标题"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                android:id="@+id/event_teacher_edit"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/linear03"
+            android:layout_marginTop="16dp"
+            android:id="@+id/linear04">
             <NumberPicker
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,13 +78,20 @@
                 android:id="@+id/day_number"
                 android:layout_marginStart="16dp"/>
         </LinearLayout>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="直接添加到日历？"
+            android:id="@+id/checkbox_direct"
+            android:layout_below="@+id/linear04"
+            android:layout_marginTop="4dp"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="保存事件"
             android:id="@+id/save_event"
-            android:layout_below="@+id/linear03"
-            android:layout_marginTop="8dp"
+            android:layout_below="@+id/checkbox_direct"
+            android:layout_marginTop="4dp"
             />
     </RelativeLayout>
 
