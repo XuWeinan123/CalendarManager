@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorWeeksUnChecked">#ff878a</color>
+    <color name="colorWeeksChecked">#ff3136</color>
+    <color name="colorDaysUnChecked">#7ab98c</color>
+    <color name="colorDaysChecked">#19c965</color>
+    <color name="colorTimesUnChecked">#b4a273</color>
+    <color name="colorTimesChecked">#a98522</color>
+
 </resources>

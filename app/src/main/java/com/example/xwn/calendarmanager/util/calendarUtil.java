@@ -9,6 +9,7 @@ import android.provider.CalendarContract;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.xwn.calendarmanager.EventRecord;
 import com.example.xwn.calendarmanager.MainActivity;
 
 import java.util.Calendar;
@@ -99,5 +100,10 @@ public class CalendarUtil {
         //提前10分钟有提醒
         values.put("minutes",10);
         context.getContentResolver().insert(Uri.parse(calanderRemiderURL),values);
+    }
+    public static void writeEvent(Context context, String calId, EventRecord eventRecord){
+        writeEvent(context,calId,eventRecord.getEventTitle(), eventRecord.getEventDescription(),eventRecord.getEventLocation(),
+                new Date(eventRecord.getEventDate().getTime()+eventRecord.getEventStartMilliSecond()),
+                new Date(eventRecord.getEventDate().getTime()+eventRecord.getEventStartMilliSecond()+eventRecord.getEventLastMilliSecond()));
     }
 }

@@ -10,8 +10,6 @@ import cn.bmob.v3.BmobObject;
 public class EventRecord extends BmobObject {
     private String eventTitle;
     private Date eventDate;
-    private int eventWeek;
-    private int eventDay;
     private String eventLocation;
     private String eventDescription;
     private long eventStartMilliSecond;
@@ -19,15 +17,16 @@ public class EventRecord extends BmobObject {
     public EventRecord(){
 
     }
-    public EventRecord(String eventTitle, Date eventDate, int eventWeek, int eventDay, String eventLocation,String eventDescription,long eventStartMilliSecond,long eventLastMilliSecond) {
+    public EventRecord(String eventTitle, Date eventDate, String eventLocation,String eventDescription,long eventStartMilliSecond,long eventLastMilliSecond) {
         this.eventTitle = eventTitle;
         this.eventDate = eventDate;
-        this.eventWeek = eventWeek;
-        this.eventDay = eventDay;
         this.eventLocation = eventLocation;
         this.eventDescription = eventDescription;
         this.eventStartMilliSecond = eventStartMilliSecond;
         this.eventLastMilliSecond = eventLastMilliSecond;
+    }
+    public EventRecord(String eventTitle, Date eventDate, String eventLocation,String eventDescription,TimeLast timeLast) {
+        this(eventTitle,eventDate,eventLocation,eventDescription,timeLast.getStart(),timeLast.getLast());
     }
 
     public long getEventStartMilliSecond() {
@@ -70,21 +69,6 @@ public class EventRecord extends BmobObject {
         this.eventDate = eventDate;
     }
 
-    public int getEventWeek() {
-        return eventWeek;
-    }
-
-    public void setEventWeek(int eventWeek) {
-        this.eventWeek = eventWeek;
-    }
-
-    public int getEventDay() {
-        return eventDay;
-    }
-
-    public void setEventDay(int eventDay) {
-        this.eventDay = eventDay;
-    }
 
     public String getEventLocation() {
         return eventLocation;
@@ -96,6 +80,6 @@ public class EventRecord extends BmobObject {
 
     @Override
     public String toString() {
-        return "事件标题"+eventTitle+"\n事件地点"+eventLocation+"\n事件周次"+eventWeek+"\n事件周几"+eventDay+"\n事件日期"+eventDate+"\n事件描述"+eventDescription;
+        return "事件标题"+eventTitle+"\n事件地点"+eventLocation+"\n事件日期"+eventDate+"\n事件描述"+eventDescription;
     }
 }

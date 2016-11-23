@@ -61,30 +61,22 @@
                 android:layout_marginRight="16dp"
                 android:id="@+id/event_teacher_edit"/>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <GridLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/linear03"
-            android:layout_marginTop="16dp"
-            android:id="@+id/linear04">
-            <NumberPicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/week_number" />
-            <NumberPicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/day_number"
-                android:layout_marginStart="16dp"/>
-        </LinearLayout>
+            android:id="@+id/checkbox_grid"
+            android:layout_below="@id/linear03"
+            android:rowCount="5"
+            android:columnCount="7">
+
+        </GridLayout>
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="直接添加到日历？"
             android:id="@+id/checkbox_direct"
-            android:layout_below="@+id/linear04"
-            android:layout_marginTop="4dp"/>
+            android:layout_below="@+id/checkbox_grid"
+            android:layout_marginTop="4dp"
+            android:checked="true"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
