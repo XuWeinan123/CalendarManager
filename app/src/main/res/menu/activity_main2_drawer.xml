@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_share"
+        android:icon="@drawable/ic_menu_share"
+        android:title="我的分享" />
+    <item
+        android:id="@+id/nav_class"
+        android:icon="@drawable/ic_menu_class"
+        android:title="课表设置" />
+    <item
+        android:id="@+id/nav_history"
+        android:icon="@drawable/ic_menu_history"
+        android:title="历史记录" />
+    <item
+        android:id="@+id/nav_order"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="功能排序" />
+    <item
+        android:id="@+id/nav_help"
+        android:icon="@drawable/ic_menu_help"
+        android:title="帮助和反馈" />
+    <item
+        android:id="@+id/nav_contact"
+        android:icon="@drawable/ic_menu_about"
+        android:title="关于我们" />
+</menu>

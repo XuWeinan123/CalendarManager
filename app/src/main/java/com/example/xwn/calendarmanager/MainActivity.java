@@ -176,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SpeechUtility.createUtility(MainActivity.this, "appid=" + "582d21ba");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         actionBar = getSupportActionBar();
@@ -462,6 +461,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "addCheckBoxs: "+ checkBoxWeeksList.size());
     }
 
+    //为RecycleView声明的内部类
     class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         List<ClassRecord> mEventRecordList;
         Context context;

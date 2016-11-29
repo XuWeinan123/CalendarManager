@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.xwn.calendarmanager.Main2Activity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_main2" />
+
+    <!--以下是第三方控件-->
+
+    <com.example.xwn.calendarmanager.widget.FloatingActionButtonPlus
+        android:id="@+id/FabPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:switchFabColor="#DB4537"
+        app:animationMode="bounce"
+        app:switchFabIcon="@drawable/ic_add_white_24dp"
+        app:layout_behavior="com.example.xwn.calendarmanager.widget.FabBehavior"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <com.example.xwn.calendarmanager.widget.FabTagLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tagText="没事找事"
+            >
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_menu_face_white"
+                app:backgroundTint="#4BB7A7"
+                app:fabSize="mini" />
+        </com.example.xwn.calendarmanager.widget.FabTagLayout>
+
+        <com.example.xwn.calendarmanager.widget.FabTagLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tagText="添加事件"
+            >
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_menu_item_white"
+                app:backgroundTint="#ff9800"
+                app:fabSize="mini" />
+        </com.example.xwn.calendarmanager.widget.FabTagLayout>
+
+        <com.example.xwn.calendarmanager.widget.FabTagLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tagText="添加课表">
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_menu_class_white"
+                app:backgroundTint="#4284E4"
+                app:fabSize="mini" />
+        </com.example.xwn.calendarmanager.widget.FabTagLayout>
+
+    </com.example.xwn.calendarmanager.widget.FloatingActionButtonPlus>
+
+</android.support.design.widget.CoordinatorLayout>

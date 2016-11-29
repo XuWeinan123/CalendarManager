@@ -14,7 +14,7 @@ import java.util.List;
 public class OtherUtil {
     private static final String TAG = "OtherUtil";
 
-    //一个能把Integer数组转化成
+    //一个能把Integer数组转化成表示范围的String
     public static String integerListToString(List<Integer> integers){
 
         StringBuffer stringBuffer = new StringBuffer();

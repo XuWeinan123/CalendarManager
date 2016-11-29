@@ -23,10 +23,12 @@ public class SplashActivity extends AppCompatActivity implements EasyPermissions
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         Bmob.initialize(this,"4c962dbe9488fcdea84b8e7b46c96ae3");
+        SpeechUtility.createUtility(getApplicationContext(), "appid=" + "582d21ba");
+
         String[] perms = {Manifest.permission.WRITE_CALENDAR, Manifest.permission.READ_CALENDAR,};
         if (EasyPermissions.hasPermissions(this, perms)) {
             Toast.makeText(this,"权限有了",Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(SplashActivity.this,MainActivity.class));
+            startActivity(new Intent(SplashActivity.this,Main2Activity.class));
             finish();
         } else {
             EasyPermissions.requestPermissions(this, "Android6.0以上的APP需要手动赋予权限，请赋予",0, perms);
