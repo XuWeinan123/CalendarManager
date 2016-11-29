@@ -2,9 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_add"
-        android:title="设置"
-        android:icon="@android:drawable/ic_input_add"
+        android:id="@+id/menu_add_to_calendar"
+        android:icon="@drawable/calendar_plus"
+        android:title="添加至日历"
         app:showAsAction="always">
+
+    </item>
+    <item
+        android:id="@+id/menu_add_to_cloud"
+        android:icon="@drawable/share_shape"
+        android:title="保存到云端"
+        app:showAsAction="always">
+
+    </item>
+    <item
+        android:id="@+id/menu_add"
+        android:title="添加"
+        android:icon="@drawable/ic_add_white_24dp"
+        app:showAsAction="always">
+    </item>
+    <item
+        android:id="@+id/menu_voice"
+        android:title="语音"
+        app:showAsAction="always">
+
     </item>
 </menu>

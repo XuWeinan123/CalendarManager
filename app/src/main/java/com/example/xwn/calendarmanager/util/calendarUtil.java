@@ -9,9 +9,13 @@ import android.provider.CalendarContract;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.xwn.calendarmanager.ClassRecord;
 import com.example.xwn.calendarmanager.EventRecord;
 import com.example.xwn.calendarmanager.MainActivity;
+import com.example.xwn.calendarmanager.TimeLast;
 
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -105,5 +109,37 @@ public class CalendarUtil {
         writeEvent(context,calId,eventRecord.getEventTitle(), eventRecord.getEventDescription(),eventRecord.getEventLocation(),
                 new Date(eventRecord.getEventDate().getTime()+eventRecord.getEventStartMilliSecond()),
                 new Date(eventRecord.getEventDate().getTime()+eventRecord.getEventStartMilliSecond()+eventRecord.getEventLastMilliSecond()));
+    }
+    public static void writeEvent(Context context, String calId, ClassRecord classRecord, Date startDate, SimpleDateFormat sdf){
+        for (int i=0;i<classRecord.getWeekNumber().size();i++){
+            for (int j=0;j<classRecord.getDayNumber().size();j++){
+                Date date = OtherUtil.calculateDateByWeeks(startDate,classRecord.getWeekNumber().get(i),classRecord.getDayNumber().get(j),sdf);
+                for (int m=0;m<classRecord.getClassTime().size();m++){
+                    TimeLast timeLast = new TimeLast(0l,0l);
+                    switch (classRecord.getClassTime().get(m)-1){
+                        case 0:
+                            timeLast = new TimeLast(8l*60l*60l*1000l,100l*60l*1000l);
+                            break;
+                        case 1:
+                            timeLast = new TimeLast((10*60l+10l)*60l*1000l,100l*60l*1000l);
+                            break;
+                        case 2:
+                            timeLast = new TimeLast((14l*60l+0l)*60l*1000l,95l*60l*1000l);
+                            break;
+                        case 3:
+                            timeLast = new TimeLast((15l*60l+55l)*60l*1000l,95l*60l*1000l);
+                            break;
+                        case 4:
+                            timeLast = new TimeLast((18l*60l+30l)*60l*1000l,95l*60l*1000l);
+                            break;
+                        case 5:
+                            timeLast = new TimeLast((20l*60l+15l)*60l*1000l,95l*60l*1000l);
+                            break;
+                    }
+                    Log.d(TAG, "在以下日期中插入: "+sdf.format(date));
+                    writeEvent(context,calId,classRecord.getClassTitle(),"老师："+classRecord.getClassTeacher(),classRecord.getClassLocation(),new Date(date.getTime()+timeLast.getStart()),new Date(date.getTime()+timeLast.getStart()+timeLast.getLast()));
+                }
+            }
+        }
     }
 }

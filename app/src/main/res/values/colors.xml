@@ -9,5 +9,9 @@
     <color name="colorDaysChecked">#19c965</color>
     <color name="colorTimesUnChecked">#b4a273</color>
     <color name="colorTimesChecked">#a98522</color>
+    <color name="textRegularBlack">#212121</color>
+    <color name="textLittleBlack">#757575</color>
+    <color name="textNoneBlack">#bdbdbd</color>
+    <color name="textDividerBlack">#e0e0e0</color>
 
 </resources>

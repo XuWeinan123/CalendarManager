@@ -15,21 +15,35 @@
         android:layout_alignParentStart="true"
         android:orientation="vertical"
         android:layout_marginStart="16dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="课程名"
+                    android:id="@+id/item_class_title"
+                    android:textSize="18sp"
+                    android:textColor="@color/textRegularBlack"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="课程老师"
+                    android:id="@+id/item_class_teacher"
+                    android:textSize="12sp"
+                    android:textColor="@color/textNoneBlack"
+                    android:layout_marginStart="4dp"/>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="事件标题"
-                android:id="@+id/item_event_title"
-                android:textSize="16sp"
-                android:textColor="#171717"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="事件时间"
-                android:id="@+id/item_event_time"
+                android:text="课程地点"
+                android:id="@+id/item_class_location"
                 android:textSize="12sp"
-                android:textColor="#636363"
+                android:textColor="@color/textRegularBlack"
                 android:layout_marginTop="2dp"/>
         </LinearLayout>
         <RelativeLayout
@@ -73,19 +87,39 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="位置信息"
-                    android:textColor="#b8b8b8"
+                    android:text="周次信息"
+                    android:textColor="@color/textLittleBlack"
                     android:textSize="16dp"
-                    android:id="@+id/item_event_location"/>
+                    android:id="@+id/item_class_week"/>
             </LinearLayout>
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="2dp"
-                android:text="日期信息"
-                android:textColor="#b8b8b8"
-                android:textSize="12dp"
-                android:id="@+id/item_event_date"/>
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/item_class_day"
+                    android:text="礼拜几信息"
+                    android:textColor="@color/textLittleBlack"
+                    android:textSize="12dp"/>
+                <View
+                    android:layout_marginStart="4dp"
+                    android:layout_width="1dp"
+                    android:layout_height="12dp"
+                    android:background="@color/textNoneBlack"
+                    />
+                <TextView
+                    android:layout_marginStart="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="第几节课信息"
+                    android:textColor="@color/textLittleBlack"
+                    android:textSize="12dp"
+                    android:id="@+id/item_class_time"/>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
