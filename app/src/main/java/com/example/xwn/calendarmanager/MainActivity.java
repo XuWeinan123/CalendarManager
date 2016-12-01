@@ -35,7 +35,6 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechUnderstander;
 import com.iflytek.cloud.SpeechUnderstanderListener;
-import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.UnderstanderResult;
 
 import org.json.JSONException;
@@ -268,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void tryInitWithVoice() {
         setParam();
-
         if(mSpeechUnderstander.isUnderstanding()){
             mSpeechUnderstander.stopUnderstanding();
             Log.d(TAG,"停止录音");
@@ -306,9 +304,9 @@ public class MainActivity extends AppCompatActivity {
         eventTitleEdit = (EditText) classDialogView.findViewById(R.id.event_title_edit);
         eventLocationEdit = (EditText) classDialogView.findViewById(R.id.event_location_edit);
         eventTeacherEdit = (EditText) classDialogView.findViewById(R.id.event_teacher_edit);
-        checkBox = (CheckBox) classDialogView.findViewById(R.id.checkbox_direct);
+        checkBox = (CheckBox) classDialogView.findViewById(R.id.checkbox_is_direct);
         saveEvent = (Button) classDialogView.findViewById(R.id.save_event);
-        gridLayout = (GridLayout) classDialogView.findViewById(R.id.checkbox_grid);
+        gridLayout = (GridLayout) classDialogView.findViewById(R.id.checkbox_grid_week);
         addCheckBoxs();
         saveEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -328,14 +326,14 @@ public class MainActivity extends AppCompatActivity {
                     classRecord.setClassTitle(eventTitleEdit.getText().toString());
                     classRecord.setClassLocation(eventLocationEdit.getText().toString());
                     classRecord.setClassTeacher(eventTeacherEdit.getText().toString());
-                    List<Integer> listWeek = new ArrayList<Integer>();
+                    List<Integer> listWeek = new ArrayList<>();
                     for (int i=0;i<checkBoxWeeksList.size();i++) {
                         if (checkBoxWeeksList.get(i).isChecked()){
                             listWeek.add(i+1);
                         }
                     }
                     classRecord.setWeekNumber(listWeek);
-                    List<Integer> listDay = new ArrayList<Integer>();
+                    List<Integer> listDay = new ArrayList<>();
                     for (int i=0;i<checkBoxDaysList.size();i++){
                         if (checkBoxDaysList.get(i).isChecked()){
                             listDay.add(i+1);

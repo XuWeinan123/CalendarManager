@@ -2,59 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/linear01">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="事件标题"
-                android:id="@+id/event_title"/>
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="输入事件标题"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="16dp"
-                android:text="web信息框架"
-                android:id="@+id/event_title_edit"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/linear02"
-            android:layout_below="@+id/linear01">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="事件地点"
-                android:id="@+id/event_location"/>
+        android:padding="16dp">
 
-            <EditText
-                android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linear01"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="输入事件地点"
+                android:text="课程名称："
+                android:id="@+id/event_title"
+                android:textSize="14sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/textRegularBlack"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:hint="输入课程名称"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="16dp"
-                android:text="东九楼D206"
-                android:id="@+id/event_location_edit"/>
-        </LinearLayout>
+                android:text="web信息框架"
+                android:textSize="14sp"
+                android:id="@+id/event_title_edit"
+                android:layout_marginStart="8dp"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/event_title"
+                android:background="@color/transparent"/>
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@+id/linear02"
-            android:id="@+id/linear03">
+            android:layout_below="@+id/linear01"
+            android:id="@+id/linear02"
+            android:layout_marginTop="16dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="课程老师"
-                android:id="@+id/event_teacher"/>
+                android:text="课程老师："
+                android:id="@+id/event_teacher"
+                android:textColor="@color/textRegularBlack"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,32 +59,140 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="16dp"
                 android:text="李卫东"
-                android:id="@+id/event_teacher_edit"/>
+                android:textSize="14sp"
+                android:id="@+id/event_teacher_edit"
+                android:background="@color/transparent"/>
         </LinearLayout>
-        <GridLayout android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/checkbox_grid"
-            android:layout_below="@id/linear03"
-            android:rowCount="5"
-            android:columnCount="7">
+            android:id="@+id/linear03"
+            android:layout_below="@+id/linear02"
+            android:layout_marginTop="16dp">
 
-        </GridLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="课程地点："
+                android:id="@+id/event_location"
+                android:textColor="@color/textRegularBlack"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="输入课程地点"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                android:text="东九楼D206"
+                android:id="@+id/event_location_edit"
+                android:textSize="14sp"
+                android:background="@color/transparent"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="课程时间："
+            android:layout_below="@+id/linear03"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/textRegularBlack"
+            android:id="@+id/event_class_time"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/event_class_time"
+            android:layout_marginTop="12dp"
+            android:text="周次"
+            android:textColor="@color/textLittleBlack"
+            android:textSize="10sp"
+            android:id="@+id/event_class_time_week"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/event_class_time_week"
+            android:id="@+id/checkbox_grid_week_linears"
+            android:layout_marginTop="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/checkbox_grid_week_linear1"
+                android:dividerPadding="2dp">
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/checkbox_grid_week_linear2"
+                android:layout_marginTop="2dp"
+                android:dividerPadding="2dp">
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/checkbox_grid_week_linear3"
+                android:layout_marginTop="2dp">
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/checkbox_grid_week_linears"
+            android:layout_marginTop="16dp"
+            android:text="星期"
+            android:textColor="@color/textLittleBlack"
+            android:textSize="10sp"
+            android:id="@+id/event_class_time_days"
+            />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/checkbox_grid_days_linear"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/event_class_time_days"
+            android:layout_alignParentStart="true">
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/checkbox_grid_days_linear"
+            android:layout_marginTop="16dp"
+            android:text="上课时间"
+            android:textColor="@color/textLittleBlack"
+            android:textSize="10sp"
+            android:id="@+id/event_class_time_times"
+            />
+        <com.example.xwn.calendarmanager.view.LcRangeBar
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_below="@+id/event_class_time_times"
+            android:id="@+id/lc_range_bar"/>
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="直接添加到日历？"
-            android:id="@+id/checkbox_direct"
-            android:layout_below="@+id/checkbox_grid"
+            android:id="@+id/checkbox_is_direct"
+            android:layout_below="@+id/lc_range_bar"
             android:layout_marginTop="4dp"
-            android:checked="true"/>
+            android:checked="true"
+            android:buttonTint="@color/colorPrimaryDark"/>
         <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:text="保存事件"
             android:id="@+id/save_event"
-            android:layout_below="@+id/checkbox_direct"
+            android:layout_below="@+id/checkbox_is_direct"
             android:layout_marginTop="4dp"
+            android:background="@drawable/log_in_button"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
             />
+
     </RelativeLayout>
 
 </LinearLayout>

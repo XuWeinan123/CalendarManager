@@ -2,10 +2,7 @@ package com.example.xwn.calendarmanager;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,23 +20,29 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.xwn.calendarmanager.util.CalendarUtil;
 import com.example.xwn.calendarmanager.util.DensityUtil;
 import com.example.xwn.calendarmanager.util.OtherUtil;
+import com.example.xwn.calendarmanager.view.LcRangeBar;
 import com.example.xwn.calendarmanager.widget.FabTagLayout;
 import com.example.xwn.calendarmanager.widget.FloatingActionButtonPlus;
-import com.iflytek.cloud.SpeechUnderstander;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import cn.bmob.v3.BmobBatch;
+import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BatchResult;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListListener;
 
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,17 +53,21 @@ public class Main2Activity extends AppCompatActivity
     private EditText eventTitleEdit;
     private EditText eventLocationEdit;
     private EditText eventTeacherEdit;
-    private CheckBox checkBox;
     private Button saveEvent;
-    private GridLayout gridLayout;
     private MyAdapter myAdapter;
-    private List<CheckBox> checkBoxTimesList;
     private List<CheckBox> checkBoxDaysList;
     private List<CheckBox> checkBoxWeeksList;
     private List<ClassRecord> mEventRecordList;
     private Date startDate;
     private SimpleDateFormat df;
     private AlertDialog classDialog;
+    private int batchFlag;
+    private LcRangeBar lcRangeBar;
+    private CheckBox checkBox;
+    private LinearLayout weeksLinearLayout1;
+    private LinearLayout weeksLinearLayout2;
+    private LinearLayout weeksLinearLayout3;
+    private LinearLayout daysLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,15 +212,22 @@ public class Main2Activity extends AppCompatActivity
         eventTitleEdit = (EditText) classDialogView.findViewById(R.id.event_title_edit);
         eventLocationEdit = (EditText) classDialogView.findViewById(R.id.event_location_edit);
         eventTeacherEdit = (EditText) classDialogView.findViewById(R.id.event_teacher_edit);
-        checkBox = (CheckBox) classDialogView.findViewById(R.id.checkbox_direct);
+
+        weeksLinearLayout1 = (LinearLayout) classDialogView.findViewById(R.id.checkbox_grid_week_linear1);
+        weeksLinearLayout2 = (LinearLayout) classDialogView.findViewById(R.id.checkbox_grid_week_linear2);
+        weeksLinearLayout3 = (LinearLayout) classDialogView.findViewById(R.id.checkbox_grid_week_linear3);
+        daysLinearLayout = (LinearLayout) classDialogView.findViewById(R.id.checkbox_grid_days_linear);
+
+        checkBox = (CheckBox) classDialogView.findViewById(R.id.checkbox_is_direct);
         saveEvent = (Button) classDialogView.findViewById(R.id.save_event);
-        gridLayout = (GridLayout) classDialogView.findViewById(R.id.checkbox_grid);
+        lcRangeBar = (LcRangeBar) classDialogView.findViewById(R.id.lc_range_bar);
+
         addCheckBoxs();
         saveEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<Date> dateCreateByWeeks = calculateDateList(startDate,checkBoxWeeksList,checkBoxDaysList,df);
-                List<TimeLast> timeLastList = calculateTimeLastList(checkBoxTimesList);
+                List<TimeLast> timeLastList = calculateTimeLastList(lcRangeBar.getMinValue(),lcRangeBar.getMaxValue());
                 Log.d(TAG, "产生的日历数目是:"+dateCreateByWeeks.size());
                 List<EventRecord> eventRecordList = new ArrayList<>();
                 for (int i= 0;i<dateCreateByWeeks.size();i++){
@@ -242,14 +256,11 @@ public class Main2Activity extends AppCompatActivity
                     }
                     classRecord.setDayNumber(listDay);
                     List<Integer> listTime = new ArrayList<>();
-                    for (int i=0;i<checkBoxTimesList.size();i++){
-                        if(checkBoxTimesList.get(i).isChecked()){
-                            listTime.add(i+1);
-                        }
+                    for (int i=lcRangeBar.getMinValue();i<lcRangeBar.getMaxValue();i++){
+                        listTime.add(i+1);
                     }
                     classRecord.setClassTime(listTime);
                     myAdapter.add(classRecord,0);
-                    Log.d(TAG, "这部分还没写"+classRecord);
                 }else{
                     String calId = CalendarUtil.queryAccountName(Main2Activity.this,"简单日历");
 
@@ -262,6 +273,7 @@ public class Main2Activity extends AppCompatActivity
                         CalendarUtil.writeEvent(Main2Activity.this, calId, eventRecordList.get(m));
                     }
                 }
+                Log.d(TAG, "MAX："+lcRangeBar.getMaxValue()+"\nMIN："+lcRangeBar.getMinValue());
                 classDialog.dismiss();
             }
         });
@@ -271,10 +283,9 @@ public class Main2Activity extends AppCompatActivity
     }
 
     //通过时间checkBox计算开始时间和持续时间
-    private List<TimeLast> calculateTimeLastList(List<CheckBox> checkBoxTimesList) {
+    private List<TimeLast> calculateTimeLastList(int m,int n) {
         List<TimeLast> list = new ArrayList<>();
-        for (int i=0;i<checkBoxTimesList.size();i++) {
-            if (checkBoxTimesList.get(i).isChecked()) {
+        for (int i=m;i<n;i++) {
                 switch (i){
                     case 0:
                         list.add(new TimeLast(8l*60l*60l*1000l,100l*60l*1000l));
@@ -295,11 +306,7 @@ public class Main2Activity extends AppCompatActivity
                         list.add(new TimeLast((20l*60l+15l)*60l*1000l,95l*60l*1000l));
                         break;
                 }
-            }
-        }
-        Log.d(TAG, "时刻列表里面有: ");
-        for (int m=0;m<list.size();m++){
-            Log.d(TAG, ""+list.get(m).toString());
+            Log.d(TAG, "课程时间: "+"第"+(m+1)+"节课已经被加入课表!");
         }
         return list;
     }
@@ -324,43 +331,43 @@ public class Main2Activity extends AppCompatActivity
         checkBoxWeeksList = new ArrayList<>();
         //决定星期几的checkBox，一共7个
         checkBoxDaysList = new ArrayList<>();
-        //决定第几节课的checkBox，一共6个
-        checkBoxTimesList = new ArrayList<>();
         String args[] = new String[]{"1-2","3-4","5-6","7-8","9-10","11-12"};
-        for (int i=1;i<=21;i++) {
+        //添加三行周次表
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.height = DensityUtil.dip2px(this, 40.0f);
+        params.width = DensityUtil.dip2px(this, 40.0f);
+        params.setMarginEnd(DensityUtil.dip2px(this,2.0f));
+        for (int i=1;i<=7;i++) {
             CheckBox checkBox = (CheckBox) getLayoutInflater().inflate(R.layout.one_check_box, null);
-            GridLayoutManager.LayoutParams params = new GridLayoutManager.LayoutParams(GridLayoutManager.LayoutParams.WRAP_CONTENT, GridLayoutManager.LayoutParams.WRAP_CONTENT);
-            params.height = DensityUtil.dip2px(this, 42.0f);
-            params.width = DensityUtil.dip2px(this, 42.0f);
             checkBox.setLayoutParams(params);
             checkBox.setText(i+"");
             checkBoxWeeksList.add(checkBox);
-            gridLayout.addView(checkBox);
+            weeksLinearLayout1.addView(checkBox);
         }
+        for (int i=1;i<=7;i++){
+            CheckBox checkBox = (CheckBox) getLayoutInflater().inflate(R.layout.one_check_box, null);
+            checkBox.setLayoutParams(params);
+            checkBox.setText((i+7)+"");
+            checkBoxWeeksList.add(checkBox);
+            weeksLinearLayout2.addView(checkBox);
+        }
+        for (int i=1;i<=7;i++){
+            CheckBox checkBox = (CheckBox) getLayoutInflater().inflate(R.layout.one_check_box, null);
+            checkBox.setLayoutParams(params);
+            checkBox.setText((i+14)+"");
+            checkBoxWeeksList.add(checkBox);
+            weeksLinearLayout3.addView(checkBox);
+        }
+        //
         for (int j=1;j<=7;j++){
             CheckBox checkBox = (CheckBox) getLayoutInflater().inflate(R.layout.one_check_box, null);
-            GridLayoutManager.LayoutParams params = new GridLayoutManager.LayoutParams(GridLayoutManager.LayoutParams.WRAP_CONTENT, GridLayoutManager.LayoutParams.WRAP_CONTENT);
-            params.height = DensityUtil.dip2px(this, 42.0f);
-            params.width = DensityUtil.dip2px(this, 42.0f);
             checkBox.setBackground(getDrawable(R.drawable.check_box_days));
             checkBox.setLayoutParams(params);
             checkBox.setText(j+"");
             checkBoxDaysList.add(checkBox);
-            gridLayout.addView(checkBox);
+            daysLinearLayout.addView(checkBox);
         }
-        for (int k=1;k<=6;k++){
-            CheckBox checkBox = (CheckBox) getLayoutInflater().inflate(R.layout.one_check_box, null);
-            GridLayoutManager.LayoutParams params = new GridLayoutManager.LayoutParams(GridLayoutManager.LayoutParams.WRAP_CONTENT, GridLayoutManager.LayoutParams.WRAP_CONTENT);
-            params.height = DensityUtil.dip2px(this, 42.0f);
-            params.width = DensityUtil.dip2px(this, 42.0f);
-            checkBox.setBackground(getDrawable(R.drawable.check_box_times));
-            checkBox.setLayoutParams(params);
-            checkBox.setText(args[k-1]);
-            checkBox.setTextSize(12);
-            checkBoxTimesList.add(checkBox);
-            gridLayout.addView(checkBox);
-        }
-        Log.d(TAG, "addCheckBoxs: "+ checkBoxWeeksList.size());
+        Log.d(TAG, "addWeekCheckBoxs: "+ checkBoxWeeksList.size());
     }
     @Override
     public void onBackPressed() {
@@ -387,7 +394,52 @@ public class Main2Activity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_share) {
+            if (itemRecycler.getChildCount() == 0){
+
+                Toast.makeText(Main2Activity.this,"列表里面没有项目",Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(Main2Activity.this, "使用二维码形式分享课表", Toast.LENGTH_SHORT).show();
+                List<BmobObject> list = new ArrayList<>();
+                List<ClassRecord> listCR = myAdapter.returnList();
+                for (int i = 0; i < listCR.size(); i++) {
+                    Log.d(TAG, "onOptionsItemSelected: " + listCR.size());
+                    list.add(listCR.get(i).setImportantKey("597939931"));
+                }
+                Log.d(TAG, "list的长度:" + list.size());
+                BmobBatch bmobBatch = new BmobBatch();
+                //我在这里立下这个用来标记失败的添加数据了
+                batchFlag = 0;
+                bmobBatch.insertBatch(list).doBatch(new QueryListListener<BatchResult>() {
+                    @Override
+                    public void done(List<BatchResult> list, BmobException e) {
+                        if (e == null) {
+                            for (int i = 0; i < list.size(); i++) {
+                                BatchResult result = list.get(i);
+                                BmobException ex = result.getError();
+                                if (ex == null) {
+                                    Log.d(TAG, "第" + i + "个数据批量添加成功：" + result.getCreatedAt() + "," + result.getObjectId() + "," + result.getUpdatedAt());
+                                    myAdapter.remove(batchFlag);
+                                } else {
+                                    Log.d(TAG, "第" + i + "个数据批量添加失败：" + ex.getMessage() + "," + ex.getErrorCode());
+                                    batchFlag = i;
+                                }
+                            }
+                        } else {
+                            Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                        }
+                    }
+                });
+            }
+
+            return true;
+        }else if (id == R.id.action_add_calendar){
+            if (itemRecycler.getChildCount() == 0){
+                Toast.makeText(Main2Activity.this,"列表里面没有项目",Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(Main2Activity.this,"添加至系统日历",Toast.LENGTH_SHORT).show();
+                addListItemToCalendar();
+            }
             return true;
         }
 
@@ -399,13 +451,46 @@ public class Main2Activity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_share) {
-
+        switch (id){
+            case R.id.nav_share:
+                Toast.makeText(Main2Activity.this,"点击了我的分享按钮",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_class:
+                Toast.makeText(Main2Activity.this,"点击了课表设置按钮",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_history:
+                Toast.makeText(Main2Activity.this,"点击了历史记录按钮",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_order:
+                Toast.makeText(Main2Activity.this,"点击了功能排序按钮",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_help:
+                Toast.makeText(Main2Activity.this,"点击了帮助与反馈按钮",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_contact:
+                Toast.makeText(Main2Activity.this,"点击了联系我们按钮",Toast.LENGTH_SHORT).show();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    //添加RecycleView中的项目至日历
+    private void addListItemToCalendar() {
+        String calId = CalendarUtil.queryAccountName(Main2Activity.this,"简单日历");
+
+        if (calId.equals("error")){
+            Toast.makeText(Main2Activity.this,"无账户将为你添加一个",Toast.LENGTH_SHORT).show();
+            calId = CalendarUtil.inputAccount(Main2Activity.this,"简单日历","课程表","this is account");
+        }
+
+        List<ClassRecord> list = myAdapter.returnList();
+        Log.d(TAG, "addListItemToCalendar: "+calId+"\n"+list.size());
+        for (int i=0;i<list.size();i++) {
+            CalendarUtil.writeEvent(Main2Activity.this, calId,list.get(i),startDate,df);
+        }
+        myAdapter.clearList();
     }
 }

@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:text="01"
     android:id="@+id/checkbox_01"
-    android:layout_below="@+id/checkbox_grid"
+    android:layout_below="@+id/checkbox_grid_week"
     android:layout_marginTop="4dp"
     android:button="@null"
     android:background="@drawable/check_box_weeks"
@@ -12,4 +12,4 @@
     android:padding="4dp"
     android:gravity="center"
     android:layout_margin="2dp"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    xmlns:android="http://schemas.android.com/apk/res/android"/>

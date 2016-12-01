@@ -23,4 +23,16 @@
         <attr name="switchFabColor" format="color"></attr>
         <attr name="animationDuration" format="integer"></attr>
     </declare-styleable>
+
+    <declare-styleable name="LcRangeBar">
+        <attr name="minMark" format="integer" />
+        <attr name="maxMark" format="integer" />
+        <attr name="ballNumber" format="integer"/>
+        <attr name="markBallRadius" format="dimension" />
+        <attr name="markBallColor" format="color" />
+        <attr name="unMarkLineSize" format="dimension" />
+        <attr name="markLineSize" format="dimension" />
+        <attr name="unMarkLineColor" format="color" />
+        <attr name="markLineColor" format="color" />
+    </declare-styleable>
 </resources>
